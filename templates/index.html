@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloudflare Cipher Manager</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script>
+        function toggleCustomCiphers() {
+            const securityLevel = document.getElementById('security_level').value;
+            const ciphersSelect = document.getElementById('ciphers');
+            if (securityLevel && securityLevel !== "--Select--") {
+                ciphersSelect.disabled = true;
+            } else {
+                ciphersSelect.disabled = false;
+            }
+        }
+
+        function toggleSecurityLevel() {
+            const ciphersSelect = document.getElementById('ciphers').value;
+            const securityLevelSelect = document.getElementById('security_level');
+            if (ciphersSelect && ciphersSelect !== "--Select--") {
+                securityLevelSelect.disabled = true;
+            } else {
+                securityLevelSelect.disabled = false;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const securityLevelSelect = document.getElementById('security_level');
+            const ciphersSelect = document.getElementById('ciphers');
+            securityLevelSelect.addEventListener('change', toggleCustomCiphers);
+            ciphersSelect.addEventListener('change', toggleSecurityLevel);
+        });
+    </script>
+</head>
+<body>
+<div class="container mt-5">
+    <h2>Cloudflare Cipher Manager</h2>
+    <form method="POST">
+        <div class="form-group">
+            <label for="zone_id">Zone ID:</label>
+            <input type="text" class="form-control" id="zone_id" name="zone_id" required>
+        </div>
+        <div class="form-group">
+            <label for="api_token">API Token:</label>
+            <input type="text" class="form-control" id="api_token" name="api_token" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="security_level">Recommended Cipher Profile:</label>
+            <select class="form-control" id="security_level" name="security_level" onchange="toggleCustomCiphers()">
+                <option value="">--Select--</option>
+                <option value="modern">Modern</option>
+                <option value="compatible">Compatible</option>
+                <option value="legacy">Legacy</option>
+            </select>
+            <small>
+                For more details, visit 
+                <a href="https://developers.cloudflare.com/ssl/reference/cipher-suites/recommendations/" target="_blank">
+                    Cloudflare Cipher Recommendations
+                </a>.
+            </small>
+        </div>
+        
+        <div class="form-group">
+            <label for="ciphers">Or select your own Cipher Suites:</label>
+            <select multiple class="form-control" id="ciphers" name="ciphers" onchange="toggleSecurityLevel()">
+                <option value="">--Select--</option>
+                <option value="ECDHE-ECDSA-AES128-GCM-SHA256">ECDHE-ECDSA-AES128-GCM-SHA256</option>
+                <option value="ECDHE-RSA-AES128-GCM-SHA256">ECDHE-RSA-AES128-GCM-SHA256</option>
+                <option value="ECDHE-ECDSA-CHACHA20-POLY1305">ECDHE-ECDSA-CHACHA20-POLY1305</option>
+                <option value="ECDHE-RSA-CHACHA20-POLY1305">ECDHE-RSA-CHACHA20-POLY1305</option>
+                <option value="ECDHE-ECDSA-AES256-GCM-SHA384">ECDHE-ECDSA-AES256-GCM-SHA384</option>
+                <option value="ECDHE-RSA-AES256-GCM-SHA384">ECDHE-RSA-AES256-GCM-SHA384</option>
+                <option value="AES128-GCM-SHA256">AES128-GCM-SHA256</option>
+                <option value="AES256-GCM-SHA384">AES256-GCM-SHA384</option>
+                <option value="AES128-SHA">AES128-SHA</option>
+                <option value="AES256-SHA">AES256-SHA</option>
+                <option value="DES-CBC3-SHA">DES-CBC3-SHA</option>
+                <option value="ECDHE-ECDSA-AES128-SHA">ECDHE-ECDSA-AES128-SHA</option>
+                <option value="ECDHE-RSA-AES128-SHA">ECDHE-RSA-AES128-SHA</option>
+                <option value="ECDHE-ECDSA-AES256-SHA">ECDHE-ECDSA-AES256-SHA</option>
+                <option value="ECDHE-RSA-AES256-SHA">ECDHE-RSA-AES256-SHA</option>
+                <option value="AES128-SHA256">AES128-SHA256</option>
+                <option value="AES256-SHA256">AES256-SHA256</option>
+                <option value="ECDHE-ECDSA-AES128-SHA256">ECDHE-ECDSA-AES128-SHA256</option>
+                <option value="ECDHE-RSA-AES128-SHA256">ECDHE-RSA-AES128-SHA256</option>
+                <option value="ECDHE-ECDSA-AES256-SHA384">ECDHE-ECDSA-AES256-SHA384</option>
+                <option value="ECDHE-RSA-AES256-SHA384">ECDHE-RSA-AES256-SHA384</option>
+                <option value="ECDHE-PSK-CHACHA20-POLY1305">ECDHE-PSK-CHACHA20-POLY1305</option>
+                <option value="ECDHE-PSK-AES128-GCM-SHA256">ECDHE-PSK-AES128-GCM-SHA256</option>
+                <option value="ECDHE-PSK-AES256-GCM-SHA384">ECDHE-PSK-AES256-GCM-SHA384</option>
+                <option value="AES128-CCM">AES128-CCM</option>
+                <option value="AES256-CCM">AES256-CCM</option>
+                <option value="AES128-CCM8">AES128-CCM8</option>
+                <option value="AES256-CCM8">AES256-CCM8</option>
+            </select>
+            <small>
+                For a full list of supported cipher suites, visit 
+                <a href="https://developers.cloudflare.com/ssl/reference/cipher-suites/supported-cipher-suites/" target="_blank">
+                    Cloudflare Supported Cipher Suites
+                </a>.
+            </small>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Update Ciphers</button>
+    </form>
+    <div class="mt-3">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+    </div>
+</div>
+</body>
+</html>
